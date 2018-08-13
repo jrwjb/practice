@@ -1,0 +1,183 @@
+python  format函数（字符串格式化）
+
+语法：str.foramt()
+eg:  '{}'.format('hello')
+设置参数
+eg:  '（地址：{url})'.format(url='www.baidu.com')
+传入对象
+eg: obj='abc'
+    'obj:{}'.format(obj)
+
+python set函数创建一个无序不重复元素集，可进行关系测试，删除重复数据，还可以计算交集、差集、并集等
+
+python 正则表达式（re模块）
+re.match函数（起始位置匹配，否则返回none ） 语法：re.match(pattern,string,flags=0)
+print(re.match('www', 'www.runoob.com').span())     (0, 3)    # 在起始位置匹配
+print(re.match('com', 'www.runoob.com'))            None           # 不在起始位置匹配）
+
+pattern  :匹配的正则表达式
+string   :要匹配的字符串
+flags    :标志位，用于控制正则表达式的匹配方式，如是否区分大小写，多行匹配等。
+
+可以使用group(num) 或 groups() 匹配对象函数来获取匹配表达式
+line = "Cats are smarter than dogs"
+3
+matchObj = re.match( r'(.*) are (.*?) .*', line, re.M|re.I)
+
+if matchObj:
+   print ("matchObj.group() : ", matchObj.group())        # matchObj.group() :  Cats are smarter than dogs
+   print ("matchObj.group(1) : ", matchObj.group(1))      # matchObj.group(1) :  Cats
+   print ("matchObj.group(2) : ", matchObj.group(2))      # matchObj.group(2) :  smarter
+else:
+   print ("No match!!")
+
+re.search 扫描整个字符串并返回第一个成功的匹配
+
+re.sub用于替换字符串中的匹配项
+语法：re.sub(pattern, repl, string, count=0)
+pattern : 正则中的模式字符串。
+repl : 替换的字符串，也可为一个函数。
+string : 要被查找替换的原始字符串。
+count : 模式匹配后替换的最大次数，默认 0 表示替换所有的匹配。
+
+
+compile 函数用于编译正则表达式，生成一个正则表达式（ Pattern ）对象，供 match() 和 search() 这两个函数使用
+
+findall 在字符串中找到正则表达式所匹配的所有子串，并返回一个列表，如果没有找到匹配的，则返回空列表
+
+
+
+glob模块   匹配查找文件
+匹配符    * ：匹配0个或多个字符
+          ？：匹配单个字符
+          []: 匹配指定范围内的字符，如[0-9]匹配数字
+glob.glob(args)  返回所有匹配文件的路径列表，args为pathname（路径名）
+glob.iglob(args) 获取一个可遍历对象，可以涿个获取匹配的文件路径，与glob.glob区别：glob.glob同时获取所有匹配路径，而glob.iglob一次只获取一个
+
+collections模块（namedtuple,deque,defaultdict,OrderedDict,Counter)
+namedtuple是个函数，通过属性而不是索引来引用tuple的元素
+>>> from collections import namedtuple
+>>> Point = namedtuple('Point', ['x', 'y'])
+>>> p = Point(1, 2)
+>>> p.x
+1
+>>> p.y
+2
+
+from collections import defaultdict
+s='AAASSSDDDFFFGGHHHHTTTTTEE'            #统计各个字母出现的次数
+d=defaultdict(int)
+for i in s:
+    d[i]+=1
+print(d)
+
+也可使用setdefault
+s='AAASSSDDDFFFGGHHHHTTTTTEE'
+d={}
+for i in s:
+    d.setdefault(i,0)
+    d[i]+=1
+# pprint.pprint(d)                          #使键排序输出
+print(d)                                    #输出每个字符出现的次数，返回对象为字典
+print(max(d,key=d.get))                 #输出出现次数最多的字符
+print(max(d,key=lambda x:d[x]))         #输出出现次数最多的字符
+print(max(d.items(),key=lambda x:x[1]))     #输出出现次数最多的字符及次数
+
+字典按键值排序
+sorted(dict.item(),key=lambda item:item)                  #按keys从小到大排列，item默认索引为[0] (item为变量可以换成x)
+sorted(dict.item(),key=lambda item:item[1])               #按values从小到大排列（item为变量可以换成x)
+sorted(dict.item(),key=lambda x:x[1],reverse=True)        #按values从大到小排列     （降序）
+
+deque方便插入和删除
+from collections import deque
+>>> q = deque(['a', 'b', 'c'])
+>>> q.append('x')
+>>> q.appendleft('y')
+>>> q
+deque(['y', 'a', 'b', 'c', 'x'])
+
+Counter 简单的计数器
+ from collections import Counter
+>>> c = Counter()
+>>> for ch in 'programming':
+...     c[ch] = c[ch] + 1
+...
+>>> c
+Counter({'g': 2, 'm': 2, 'r': 2, 'a': 1, 'i': 1, 'o': 1, 'n': 1, 'p': 1})
+
+
+迭代器和生成器
+迭代器：iter()和next()
+>>>list=[1,2,3,4]
+>>> it = iter(list)    # 创建迭代器对象
+>>> print (next(it))    1    # 输出迭代器的下一个元素
+
+生成器  yield 函数    生成器是一个返回迭代器的函数，只能用于迭代操作，更简单点理解生成器就是一个迭代器
+
+
+os 模块和 sys 模块
+
+os.path.basename(‘path/filename’) 去掉目录路径，返回文件名
+os.path.dirname(‘path/filename’) 去掉文件名，返回目录路径
+os.path.join(path1[,path2[,...]]) 将分离的各部分组合成一个路径名
+os.path.split('path') 返回( dirname(), basename())元组
+os.path.splitext() 返回 (filename, extension) 元组
+os.path.exists() 是否存在
+os.path.isabs() 是否为绝对路径
+os.path.isdir() 是否为目录
+os.path.isfile() 是否为文件
+
+os.walk()循环遍历目录下文件及目录以及子目录、文件
+for root,dirs,files in os.walk(path)
+
+shutil 模块
+shutil.copyfile(src,dst)   从源src复制到dst中去
+shutil.move(src,dst)  移动文件或重命名
+shutil.copymode(src,dst) 复制权限
+shutil.sopystat(src,dst) 复制权限、最后访问时间、最后修改时间
+shutil.copy(src,dst) 复制一个文件到一个文件或目录
+shutil.copy2(src,dst) 在copy的基础上再复制文件到最后访问时间与修改时间也复制过来
+shutil.copytree(oldir,newdir,True/Flase)olddir
+拷贝一份newdir，如果第3个参数是True，则复制目录时将保持文件夹下的符号连接，如果第3个参数是False，则将在复制的目录下生成物理副本来替代符号连接
+shutil.rmtree(src) 递归删除一个目录以及目录内的内容
+
+命令行读取模块  argparse模块
+
+import argparse
+
+parse=argparse.ArgumentParser(description="your script description")  # description参数可以用于插入描述脚本用途的信息，可以为空
+或
+parser=argparse.ArgmentParser()
+parser.add_argument('filename')       #第一个位置参数
+parser.add_argument('num',type=int)   #第二个位置参数，类型为整型
+args=parser.parse_args()
+#调用命令行参数
+args.filename
+args.num
+
+
+pandas 中loc取值为显性索引，iloc取值为隐形索引，ix可以混合使用隐形和显性索引
+
+
+if __name__=='__main__':     如果直接运行，该语句下代码被执行，如果作为模块被导入，该语句下代码不执行
+
+operator 模块中的 itemgetter 可以使用多个关键字对序列进行排序
+eg: sorted(list,key=itemgetter(3,0)) 即先按照索引3的位置进行排序，再按照索引0的位置及进行排序
+
+numpy ：
+unique(x)计算x中的唯一元素，并返回有序结果
+intersectld(x,y) 计算x,y中的公共元素，并返回有序结果
+unionld(x,y) 计算x,y的并集，返回有序结果
+
+
+pandas DataFrame
+
+删除原来索引，重新建立从0开始的索引 :df.reset_index(drop=True)
+按列索引排序: df.sort_index(axis=1,ascending=False)  (axis=0 依照行索引排序  False为降序，True为升序）
+按值排序： df.sort_values(by='此处为列索引'）
+删除缺失值：df.dropna(how='any')       默认去除含na的行，axis=1为列
+对某列中值进行替换：df.某列.map({'原值1'：'替换值1','原值2'：'替换值2'})
+填充缺失值：df.fillna(value)   也可指定列填充df.fillna({某列：某值，某列：某值})
+
+
+
