@@ -1,0 +1,55 @@
+$@ ：所有参数的内容
+$# : 参数的个数
+$0: 脚本名字
+$1: 第一个参数，$2等等
+$*: 所有参数，以空格分开
+
+expr命令执行算术运算
+expr 5 + 2
+expr $(le BC01.fa | wc -l) / 2 或者 expr `wc -l BC01.fa` / 2
+
+检查前一命令是否执行成功，在if条件中使用“$?”可以来检查前一命令的结束状态,如果为0，则执行成功
+
+case 用法：
+case 变量 in
+值1)
+命令1
+命令2
+…..
+最后命令
+!!
+值2)
+命令1
+命令2
+……
+最后命令
+;;
+esac
+
+case "${opt}" in
+	"Install-Puppet-Server" )
+		install_master $1
+		exit
+	;;
+
+	"Install-Puppet-Client" )
+		install_client $1
+		exit
+	;;
+
+	"Config-Puppet-Server" )
+		config_puppet_master
+		exit
+	;;
+
+	"Config-Puppet-Client" )
+		config_puppet_client
+		exit
+	;;
+
+	"Exit" )
+		exit
+	;;
+
+	* ) echo "Bad option, please choose again"
+esac
