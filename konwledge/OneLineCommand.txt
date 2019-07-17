@@ -1,0 +1,45 @@
+Linux 两个文件求交集、并集、差集
+sort a.txt b.txt | uniq -d   ### 交集
+
+sort a.txt b.txt | uniq   ###并集 
+
+sort a.txt b.txt b.txt | uniq -u  ## 差集 a-b
+
+sort b.txt a.txt a.txt | uniq -u  ## 差集 b-a
+
+使用sort可以将文件进行排序，可以使用sort后面的玲玲，例如 -n 按照数字格式排序，例如 -i 忽略大小写，例如使用-r 为逆序输出等
+
+uniq为删除文件中重复的行，得到文件中唯一的行，后面的命令 -d 表示的是输出出现次数大于1的内容 -u表示的是输出出现次数为1的内容，那么对于上述的求交集并集差集的命令做如下的解释：
+
+sort a.txt b.txt | uniq -d：将a.txt b.txt文件进行排序，uniq使得两个文件中的内容为唯一的，使用-d输出两个文件中次数大于1的内容，即是得到交集
+
+sort a.txt b.txt | uniq ：将a.txt b.txt文件进行排序，uniq使得两个文件中的内容为唯一的，即可得到两个文件的并集
+
+sort a.txt b.txt b.txt | uniq -u：将两个文件排序，最后输出a.txt b.txt b.txt文件中只出现过一次的内容，因为有两个b.txt所以只会输出只在a.txt出现过一次的内容，即是a.txt-b.txt差集
+
+对于b.txt-a.txt为同理
+
+grep 命令是常用的搜索文本内容的，要找交集，如下即可：
+grep -F -f a.txt b.txt | sort | uniq
+
+差集:
+grep -F -v -f a.txt b.txt | sort | uniq
+grep -F -v -f b.txt a.txt | sort | uniq
+第一行结果为b-a；第二行为a-b。注意顺序很重要
+
+根据id提取fastq
+grep -f id -A 3 BC01.fq > test.fq   ### -f 参数为ID文件
+
+批量重命名文件
+1、只更改户后缀
+rename 's/.txt/.log/' *.txt   #### 把txt后缀改为log
+
+2、小写变大写
+for i in `ls`;do mv -f $i `echo $i | tr a-z A-Z`;done
+
+3、 for i in `ls`;do mv -f $i `echo $i | sed 's/..../..../'`;done  ##使用sed替换
+rename 's/small/large/' image_*.png
+
+删除空行
+grep -v '^$' file   或  sed '/^$/d' file 或 sed -n '/./p' file
+awk '/./{print}' file 或  tr -s 'n'
