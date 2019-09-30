@@ -5,6 +5,8 @@ import datetime
 import sys
 import glob
 import xlrd
+import uniprot_go
+from uniprot_go import Spider
 # import pandas as pd
 
 def new_dir(qe_path):
@@ -84,7 +86,7 @@ def sub(file):
 
 
     else:
-        path = re.sub(r'[（(|)）]', '', file.split('.')[0])
+        path = re.sub(r'[（(|)）]', '', os.path.splitext(file)[0])
         if len(path.split('\\')[-1]) > 31:
             newpath = '\\'.join(path.split('\\')[:-1]) + '\\' + path.split('\\')[-1][:31]
             write(newpath, file)
@@ -99,15 +101,16 @@ def main():
             file = qe + '\\' + file
             if os.path.isfile(file):
                 sub(file)
-        os.system(f'Rscript {path}\\R\\Uniprot_GO.R {qe}')
+        Spider(qe).main()
+        # os.system(f'Rscript {path}\\R\\Uniprot_GO.R {qe}')
 
 if __name__ == '__main__':
-	try:
-		path = sys.argv[0]
-		path = '\\'.join(path.split('\\')[:-1])
-		qe_path = os.path.join(path, 'QE')
-		main()
-	except Exception as ex:
-		print(ex)
-	finally:
-		os.system('pause')
+    try:
+        path = sys.argv[0]
+        path = '\\'.join(path.split('\\')[:-1])
+        qe_path = os.path.join(path, 'Data')
+        main()
+    except Exception as ex:
+        print(ex)
+    finally:
+        os.system('pause')
