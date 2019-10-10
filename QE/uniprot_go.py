@@ -83,6 +83,7 @@ class Spider():
                 threads = []
                 for _ in range(self.thread_num):
                     t = Thread(target=self.get_info)
+                    time.sleep(0.2)
                     t.start()
                     threads.append(t)
                 for t in threads:
