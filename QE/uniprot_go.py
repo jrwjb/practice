@@ -1,6 +1,7 @@
 import os
 import re
 import time
+import socket
 from tqdm import tqdm
 from queue import Queue
 from functools import wraps
@@ -26,7 +27,7 @@ class Spider():
         self.path = path
         self.proid = Queue()
         self.data = list()
-        self.thread_num = 100
+        self.thread_num = 20
 
     def produce_xml(self, dir):
         url = 'http://www.uniprot.org/uniprot/{}.xml'
@@ -42,7 +43,8 @@ class Spider():
             xml = self.proid.get()
             proid = re.split('[/.]', xml)[-2]
             try:
-                tree = ET.parse(urlopen(xml))
+                response = urlopen(xml)
+                tree = ET.parse(response)
                 root = tree.getroot()
                 goid = [child.attrib.get('id') for child in root.iter(tag='{http://uniprot.org/uniprot}dbReference') if child.attrib.get('type') == 'GO']
                 tmp = [child.attrib.get('value') for child in root.iter(tag='{http://uniprot.org/uniprot}property') if child.attrib.get('type') == 'term']
@@ -73,6 +75,8 @@ class Spider():
                     all_go = ';'.join(all_go)
                     out = f'{proid}\t{proname}\t{geneid}\t{genename}\t{bp}\t{mf}\t{cc}\t{all_go}'.split('\t')
                 self.data.append(out)
+
+                response.close()
             except Exception as e:
                 out = f'{proid}\t-\t-\t-\t-\t-\t-\t-'.split('\t')
                 self.data.append(out)
@@ -80,6 +84,7 @@ class Spider():
     # print(get_info('A1YZ34'))
     @fn_timer
     def main(self):
+        socket.setdefaulttimeout(20)
         wb = Workbook()
         i = 0
         for d in tqdm(os.listdir(self.path)):
@@ -89,7 +94,7 @@ class Spider():
                 threads = []
                 for _ in range(self.thread_num):
                     t = Thread(target=self.get_info)
-                    time.sleep(0.2)
+                    time.sleep(1)
                     t.start()
                     threads.append(t)
                 for t in threads:
